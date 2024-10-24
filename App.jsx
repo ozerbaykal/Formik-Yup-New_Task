@@ -1,11 +1,15 @@
-import {View, Text, SafeAreaView} from 'react-native';
-import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import Navigation from './src/router/navigation';
+import * as eva from '@eva-design/eva';
+import {ApplicationProvider, Layout, Text} from '@ui-kitten/components';
 
 const App = () => {
   return (
-    <SafeAreaView>
-      <Text>App</Text>
-    </SafeAreaView>
+    <ApplicationProvider {...eva} theme={eva.light}>
+      <NavigationContainer>
+        <Navigation />
+      </NavigationContainer>
+    </ApplicationProvider>
   );
 };
 

@@ -1,14 +1,20 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import FloatActionButton from '../../components/UI/floatActionButton';
+import {ADDTASKS} from '../../utils/routes';
 
-const Home = () => {
+const Home = ({navigation}) => {
   return (
-    <View>
-      <Text>Home</Text>
+    <View style={styles.container}>
+      <FloatActionButton onPress={() => navigation.navigate(ADDTASKS)} />
     </View>
   );
 };
 
 export default Home;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
