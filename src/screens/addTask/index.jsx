@@ -1,7 +1,8 @@
-import {Input, Button} from '@ui-kitten/components';
+import {Input, Button, Radio, RadioGroup} from '@ui-kitten/components';
 import {Formik} from 'formik';
 import {StyleSheet, View, Alert} from 'react-native';
 import CustomDatePicker from '../../components/UI/customDatePicker';
+import {Category} from 'iconsax-react-native';
 
 const AddTask = () => {
   return (
@@ -10,8 +11,9 @@ const AddTask = () => {
         initialValues={{
           title: '',
           description: '',
-          startDate: 'null',
-          endDate: 'null',
+          startDate: null,
+          endDate: null,
+          category: null,
         }}
         onSubmit={values => Alert.alert(JSON.stringify(values, null, 2))}>
         {({handleChange, handleSubmit, values, setFieldValue, errors}) => (
@@ -47,6 +49,15 @@ const AddTask = () => {
               date={values.endDate}
               onSelectDate={date => setFieldValue('endDate', date)}
             />
+            <RadioGroup
+              selectedIndex={values.category}
+              onChange={index => setFieldValue('category', index)}>
+              <Radio status="success"> Software</Radio>
+              <Radio status="success">Design</Radio>
+
+              <Radio status="success">Oparation</Radio>
+            </RadioGroup>
+
             <Button
               status="success"
               style={{marginVertical: 10}}
