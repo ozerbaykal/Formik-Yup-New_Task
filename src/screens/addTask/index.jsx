@@ -4,11 +4,16 @@ import {StyleSheet, View} from 'react-native';
 import CustomDatePicker from '../../components/UI/customDatePicker';
 import taskSchema from '../../utils/validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {status} from '../../utils/constant';
+import uuid from 'react-native-uuid';
 
 const AddTask = () => {
   const saveTask = async values => {
     try {
-      await AsyncStorage.setItem('task', JSON.stringify(values));
+      const savedTasks = await AsyncStorage.getItem('tasks');
+      let myTask = savedTasks ? JSON.parse(savedTasks) : [];
+      myTask.push(values);
+      await AsyncStorage.setItem('tasks', JSON.stringify(myTask));
     } catch (error) {
       console.log(error);
     }
@@ -18,11 +23,13 @@ const AddTask = () => {
     <View style={styles.container}>
       <Formik
         initialValues={{
-          title: '',
-          description: '',
+          id: uuid.v4(),
+          title: 'Yazılım',
+          description: 'react-native konuları',
           startDate: null,
           endDate: null,
           category: null,
+          status: status.ONGOING,
         }}
         validationSchema={taskSchema}
         onSubmit={values => {
