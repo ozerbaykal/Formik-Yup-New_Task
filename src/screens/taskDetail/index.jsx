@@ -51,7 +51,7 @@ const TaskDetail = ({route}) => {
             status: newStatus, //statusu değiştiriyoruz
           };
         }
-        return tasks;
+        return task;
       });
       await AsyncStorage.setItem('tasks', JSON.stringify(updatedTask));
     } catch (error) {
@@ -118,9 +118,9 @@ const TaskDetail = ({route}) => {
             justifyContent: 'space-between',
             paddingVertical: 15,
           }}>
-          <Text style={{fontSize: 20, fontWeight: '600'}}>Statatus:</Text>
+          <Text style={{fontSize: 20, fontWeight: '600'}}>Status:</Text>
           <Text>
-            {taskValues.find(task => task.status === item?.status).title}
+            {taskValues.find(task => task.status === item?.status)?.title}
           </Text>
         </View>
         <Divider />
