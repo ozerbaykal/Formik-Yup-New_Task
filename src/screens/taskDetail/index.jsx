@@ -1,13 +1,63 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import AppColors from '../../theme/color';
-import {Divider} from '@ui-kitten/components';
+import {Button, Divider} from '@ui-kitten/components';
 import moment from 'moment';
 import {setCategory} from '../../utils/function';
-import {taskValues} from '../../utils/constant';
+import {status, taskValues} from '../../utils/constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TaskDetail = ({route}) => {
   const {item} = route?.params;
+
+  //taskları silecek fonsiyon
+  const deleteTask = async () => {
+    try {
+      const savedTasks = await AsyncStorage.getItem('tasks');
+      if (savedTasks === null) {
+        return; //görev yoksa durdur
+      }
+      const tasks = JSON.parse(savedTasks);
+
+      //görevi sil
+
+      const filteredTasks = tasks.filter(task => task.id !== item.id);
+
+      //filtrelenmiş görevleri depola
+
+      await AsyncStorage.setItem('tasks', JSON.stringify(filteredTasks));
+    } catch (error) {
+      console.log('Bir hata oluştu', error);
+    }
+  };
+
+  //update butonları için güncelleme
+  const updatedTask = async newStatus => {
+    try {
+      //görevleri al
+      const savedTasks = await AsyncStorage.getItem('tasks');
+
+      if (savedTasks === null) {
+        return;
+      }
+      const tasks = JSON.parse(savedTasks);
+
+      //güncellencek görevi bul
+
+      const updatedTask = tasks.map(task => {
+        if (task.id === item.id) {
+          return {
+            ...task,
+            status: newStatus, //statusu değiştiriyoruz
+          };
+        }
+        return tasks;
+      });
+      await AsyncStorage.setItem('tasks', JSON.stringify(updatedTask));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -75,6 +125,30 @@ const TaskDetail = ({route}) => {
         </View>
         <Divider />
       </ScrollView>
+
+      <View>
+        <Button
+          onPress={() => updatedTask(status.PENDING)}
+          style={styles.button}
+          status="primary">
+          START
+        </Button>
+        <Button
+          onPress={() => updatedTask(status.COMPLETED)}
+          style={styles.button}
+          status="success">
+          COMPLETED
+        </Button>
+        <Button
+          onPress={() => updatedTask(status.CANCEL)}
+          style={styles.button}
+          status="danger">
+          CANCEL
+        </Button>
+        <Button onPress={deleteTask} style={styles.button} status="warning">
+          DELETE
+        </Button>
+      </View>
     </View>
   );
 };
@@ -86,5 +160,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColors.WHITE,
     padding: 10,
+  },
+  button: {
+    marginTop: 10,
   },
 });
